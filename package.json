@@ -1,0 +1,24 @@
+{
+  "name": "node_tut",
+  "version": "1.0.0",
+  "description": "Basis Node Tutorial on  how to create a server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tushar2k19/Node_tutorial.git"
+  },
+  "author": "Tushar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tushar2k19/Node_tutorial/issues"
+  },
+  "homepage": "https://github.com/tushar2k19/Node_tutorial#readme",
+  "dependencies": {
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "nodemon": "^3.1.0"
+  }
+}
