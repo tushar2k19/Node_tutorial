@@ -110,3 +110,71 @@ app.get('/', function(req, res){
 app.listen(3000, function(){
     console.log("Server is running on port 3000");
 })
+
+
+//mongoose mongo db is saved in db.js
+let db = require('./db.js');
+
+
+
+
+// bodyParser
+
+let bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+
+
+
+
+//MODELS
+
+let Person = require('./models/Person')
+
+//app.post('/person', (req, res) => {
+//    let data = req.body;
+//    let person = new Person(data);
+//    person.save((error, person) => {
+//        if(error){
+//            console.log("Error saving person: " + error);
+////            res.json({
+////                error: "Internal Server Error Bro",
+////                status: 500
+////            });                                                              //this method is not deprecated and now no longer works
+//            res.status(500).json({error: "Internal Server Error Bro"})         // so now we use async await instead
+//        }else
+//        {
+//            console.log("Person saved successfully");
+//            res.status(200).json({person})
+//        }
+//
+//    });
+//})
+
+
+app.post('/person', async (req, res) => {
+    try {
+        console.log("tusharr-> ", req.body);
+        let data = req.body;
+        let person = new Person(data);
+        await person.save();
+        res.status(200).json({person: person})
+    }catch (error) {
+        console.log(error)
+        res.status(500).json({error: error});
+    }
+})
+
+app.get('/person', async (req, res) => {
+    try {
+        let data = await Person.find();
+        console.log("got all details", data);
+        res.status(200).json({person: data})
+    }catch (error){
+        console.log(error)
+        res.status(500).json({error: error.message});
+    }
+})
+
+
+
