@@ -241,8 +241,6 @@ app.get('/', localAuthMiddleware,(req, res) => {  // using the local strategy an
 
 
 
-
-
 // Routes Router
 
 const personRoutes = require('./routes/personRoutes.js');
