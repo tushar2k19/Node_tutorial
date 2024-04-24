@@ -103,9 +103,9 @@
 const express = require("express");
 let app = express();
 
-app.get('/', function(req, res){
-    res.send('Your Response, my lord!!');
-})
+//app.get('/', function(req, res){
+//    res.send('Your Response, my lord!!');               //applied again neeche jaake
+//})
 
 app.listen(3000, function(){
     console.log("Server is running on port 3000");
@@ -152,29 +152,101 @@ let Person = require('./models/Person')
 //})
 
 
-app.post('/person', async (req, res) => {
-    try {
-        console.log("tusharr-> ", req.body);
-        let data = req.body;
-        let person = new Person(data);
-        await person.save();
-        res.status(200).json({person: person})
-    }catch (error) {
-        console.log(error)
-        res.status(500).json({error: error});
-    }
+//app.post('/person', async (req, res) => {
+//    try {
+//        let data = req.body;
+//        let person = new Person(data);
+//        await person.save();
+//        res.status(200).json({person: person})
+//    }catch (error) {
+//        console.log(error)
+//        res.status(500).json({error: error});
+//    }
+//})
+//
+//app.get('/person', async (req, res) => {
+//    try {
+//        let data = await Person.find();
+//        console.log("got all details", data);
+//        res.status(200).json({person: data})          we can achieve all of this using the express Router() function. check the file, personRoutes.js
+//    }catch (error){
+//        console.log(error)
+//        res.status(500).json({error: error.message});
+//    }
+//})
+//
+//// Parameterized api call
+////  /person/:work     -> work becomes a variable here (could be named anything)
+//
+//app.get('/person/:work', async (req, res) => {
+//    try {
+//        let params = req.params.work;
+//        let data = await Person.find({work: params});
+//        console.log("got all details", data);
+//        res.status(200).json({person: data})
+//    }catch (error){
+//        console.log(error)
+//        res.status(500).json({error: error.message});
+//    }
+//})
+
+
+
+
+
+//middleware working
+const logRequest = (req,res,next) => {
+    console.log(`${new Date().toLocaleString()} - req made to -> ${req.originalUrl}`)
+    next()  //moves to the next step. any other middleware or the next step
+}
+//now this middleware can be used in any route or within the whole app:
+// specific route ->
+//app.get('/', logRequest ,function(req, res){
+//    res.send('Your Response, my lord!!');               //applied again neeche jaake
+//})
+
+// for any other router file
+//app.use('/person', logRequest, personRoutes)
+
+// full app =>
+app.use(logRequest);     //just write it before the app.use('/person', personRoutes) otherwise this won't get executed
+
+
+
+
+
+
+
+
+// Authentication Passport passport-local (used before Router)
+const passport = require('./auth.js')
+
+
+app.use(passport.initialize());
+//app.get('/', passport.authenticate('local', {session: false}) ,(req, res) => {
+//    res.send("Welcomeo aboard sir, home page")
+//})
+let localAuthMiddleware = passport.authenticate('local', {session: false});
+app.get('/', localAuthMiddleware,(req, res) => {  // using the local strategy and not using the sessions at the moment
+    res.send("Welcome aboard sir, home page")
 })
 
-app.get('/person', async (req, res) => {
-    try {
-        let data = await Person.find();
-        console.log("got all details", data);
-        res.status(200).json({person: data})
-    }catch (error){
-        console.log(error)
-        res.status(500).json({error: error.message});
-    }
-})
+//if we wanted to add an authentication in the persons route, then:
+//app.use('/person', localAuthMiddleware ,personRoutes)
+
+
+
+
+
+
+
+
+
+
+// Routes Router
+
+const personRoutes = require('./routes/personRoutes.js');
+app.use('/person', personRoutes)
 
 
 
