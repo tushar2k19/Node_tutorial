@@ -235,7 +235,7 @@ app.get('/', localAuthMiddleware,(req, res) => {  // using the local strategy an
 //app.use('/person', localAuthMiddleware ,personRoutes)
 
 
-
+//localAuthMiddleware basically asks for id password on all routes where we want to include the middleware. but har endpoint par thodi maangenge id,password. so we are making jwt sessions now.
 
 
 
